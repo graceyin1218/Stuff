@@ -1,8 +1,12 @@
 var express = require('express');
 var app = express();
+var fs = require('fs');
 
 app.get('/', function(req, res) {
-  res.send('Hello, world!')
+  res.send(fs.readFileSync('index.html').toString());
+});
+app.get('/index.js', function(req, res) {
+  res.send(fs.readFileSync('index.js').toString());
 });
 
 
