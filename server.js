@@ -3,12 +3,11 @@ var app = express();
 var fs = require('fs');
 
 app.get('/', function(req, res) {
-  res.send(fs.readFileSync('index.html').toString());
+  res.sendFile('index.html');
 });
 app.get('/index.js', function(req, res) {
-  res.send(fs.readFileSync('index.js').toString());
+  res.sendFile('index.js');
 });
-
 
 var server = app.listen(process.env.PORT, function() {
   var host = server.address().address,
