@@ -13,9 +13,9 @@ MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, db)
 	photos = db.collection("photos");
 });
 
-app.get('/:word/:prevID/:url', function(req, res)
+app.get('/submit', function(req, res)
 {
-	var newpic = {"word" : req.params.word, "prevID" : req.params.prevID, "url": req.params.url};
+	var newpic = {"word" : req.query.word, "prevID" : req.query.prevID, "url": req.query.url};
 
 	photos.insert(newpic, function(err, doc)
 	{
@@ -25,9 +25,9 @@ app.get('/:word/:prevID/:url', function(req, res)
 	});
 });
 
-app.get("/search/:ID", function(req, res)
+app.get("/search", function(req, res)
 {
-	var query = {"_id": req.params.ID};
+	var query = {"_id": req.query.ID};
 	photos.find(query, function(err, doc)
 	{
 		res.sendFile(doc["url"]);
