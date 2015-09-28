@@ -50,6 +50,23 @@ app.get("/search", function(req, res)
   });
 });
 
+app.get("/random", function(req, res)
+{
+  var random = getRandom(function(doc)
+  {
+    res.send(doc);
+  });
+});
+
+function getRandom(callback)
+{
+  var n = photos.count();
+  var m = Math.floor(Math.random()*n);
+  var cursor = photos.find().limit(1).skip(m);
+  callback(cursor.nextObject());
+}
+
+
 app.use(express.static(__dirname + '/public'));
 
 var server = app.listen(process.env.PORT, function() {
