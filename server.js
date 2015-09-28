@@ -4,13 +4,14 @@ var mongo = require("mongodb");
 var MongoClient = mongo.MongoClient;
 
 var fs = require('fs');
-
+var db;
 var photos;
 
-MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, db)
+MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, database)
 {
 	if (err) throw err;
-	photos = db.collection("photos");
+	photos = database.collection("photos");
+	db = database;
 });
 
 app.get('/submit', function(req, res)
@@ -26,8 +27,8 @@ app.get('/submit', function(req, res)
 });
 
 function getNextSequence(name) {
-	  var ret = db.counters.findAndModify(
-	  {
+	var ret = db.collection("counters").findAndModify(
+	{
 	        query: { _id: name },
 		update: { $inc: { seq: 1 } },
                  new: true
