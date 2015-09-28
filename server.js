@@ -13,7 +13,26 @@ MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, db)
 	photos = db.collection("photos");
 });
 
+app.get('/:word/:prevID/:url', function(req, res)
+{
+	var newpic = {"word" : req.params.word, "prevID" : req.params.prevID, "url": req.params.url};
 
+	photos.insert(newpic, function(err, doc)
+	{
+		if (err) throw err;
+		var id = doc["_id"];
+		res.send("new ID: " + id);
+	});
+});
+
+app.get("/search/:ID", function(req, res)
+{
+	var query = {"_id": req.params.ID};
+	photos.find(query, function(err, doc)
+	{
+		res.sendFile(doc["url"]);
+	});
+});
 
 app.get('/', function(req, res) {
 /*
@@ -35,6 +54,8 @@ app.get('/', function(req, res) {
 
   res.sendFile('index.html');
 });
+
+
 app.get('/index.js', function(req, res) {
   res.sendFile('index.js');
 });
