@@ -15,7 +15,7 @@ MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, db)
 
 app.get('/submit', function(req, res)
 {
-	var newpic = {"word" : req.query.word, "prevID" : req.query.prevID, "url": req.query.url};
+	var newpic = {"_id": getNextSequence("photoID"), "word" : req.query.word, "prevID" : req.query.prevID, "url": req.query.url};
 
 	photos.insert(newpic, function(err, doc)
 	{
