@@ -20,6 +20,21 @@ MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, database)
   });
 });
 
+function getWholeList(id, callback) {
+  photos.find({_id: id}).toArray(function(err, result) {
+    result = result[0];
+    if (result != null && result.prevID !== -1) {
+      getWholeList(result.prevID, function(list) {
+        list.unshift(result);
+        callback(list);
+      });
+    }
+    else {
+      callback([]);
+    }
+  });
+}
+
 app.get('/submit', function(req, res)
 {
   // We need to put getNextSequence in callback form as well
@@ -27,8 +42,12 @@ app.get('/submit', function(req, res)
     var newpic = {"_id": id, "word" : req.query.word, "prevID" : req.query.prevID, "url": req.query.url};
 
     photos.insert(newpic, function(err, doc) {
-      if (err) throw err;
-      res.send("new ID: " + id);
+      getWholeList(id, function(list) {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({
+          list: list
+        }));
+      });
     });
   });
 });
@@ -37,7 +56,7 @@ function getNextSequence(name, callback) {
   console.log('called on', name);
   // counters.findAndModify() does not return a value; instead, use a callback function(err, ret) to get the "return value".
   var ret = counters.findAndModify({ _id: name }, null, {$inc: { seq: 1 } }, {new: true}, function(err, ret) {
-    callback(ret.value.seq);
+    callback(ret.value.seq.toString());
   });
 }
 
