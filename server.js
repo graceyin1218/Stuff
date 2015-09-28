@@ -13,9 +13,9 @@ MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, db)
 	photos = db.collection("photos");
 });
 
-app.get('/:word/:prevID/:url', function(req, res)
+app.get('//:word/:prevID/:url', function(req, res)
 {
-	var newpic = {"word" : req.params.word, "prevID" : req.params.prevID, "url": req.params.url};
+	var newpic = {getNextSeqeuence "word" : req.params.word, "prevID" : req.params.prevID, "url": req.params.url};
 
 	photos.insert(newpic, function(err, doc)
 	{
@@ -24,6 +24,18 @@ app.get('/:word/:prevID/:url', function(req, res)
 		res.send("new ID: " + id);
 	});
 });
+
+function getNextSequence(name) {
+	  var ret = db.counters.findAndModify(
+	  {
+	        query: { _id: name },
+		update: { $inc: { seq: 1 } },
+                 new: true
+     	}
+     );
+
+     return ret.seq;
+}
 
 app.get("/search/:ID", function(req, res)
 {
