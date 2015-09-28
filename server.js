@@ -3,6 +3,7 @@ var app = express();
 var mongo = require("mongodb");
 var MongoClient = mongo.MongoClient;
 
+var fs = require('fs');
 
 var photos;
 
@@ -31,8 +32,12 @@ app.get('/', function(req, res) {
 	//upload photo
 	photos.insert(pretendphoto);
 
-});
 
+  res.sendFile('index.html');
+});
+app.get('/index.js', function(req, res) {
+  res.sendFile('index.js');
+});
 
 var server = app.listen(process.env.PORT, function() {
   var host = server.address().address,
