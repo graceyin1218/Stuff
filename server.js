@@ -5,37 +5,37 @@ var MongoClient = mongo.MongoClient;
 
 var fs = require('fs');
 var db;
-var photos;
+var photos, counters;
 
 MongoClient.connect("mongodb://localhost:27017/Stuff", function(err, database)
 {
 	if (err) throw err;
 	photos = database.collection("photos");
+  counters = database.collection("counters");
 	db = database;
+  counters.insert({
+    '_id': 'photoID',
+    'seq': 0
+  });
 });
 
 app.get('/submit', function(req, res)
 {
-	var newpic = {"_id": getNextSequence("photoID"), "word" : req.query.word, "prevID" : req.query.prevID, "url": req.query.url};
+  getNextSequence('photoID', function(id) {
+    var newpic = {"_id": id, "word" : req.query.word, "prevID" : req.query.prevID, "url": req.query.url};
 
-	photos.insert(newpic, function(err, doc)
-	{
-		if (err) throw err;
-		var id = doc["_id"];
-		res.send("new ID: " + id);
-	});
+    photos.insert(newpic, function(err, doc) {
+      if (err) throw err;
+      res.send("new ID: " + id);
+    });
+  });
 });
 
-function getNextSequence(name) {
-	var ret = db.collection("counters").findAndModify(
-	{
-	        query: { _id: name },
-		update: { $inc: { seq: 1 } },
-                 new: true
-     	}
-     );
-
-     return ret.seq;
+function getNextSequence(name, callback) {
+  console.log('called on', name);
+  var ret = counters.findAndModify({ _id: name }, null, {$inc: { seq: 1 } }, {new: true}, function(err, ret) {
+    callback(ret.value.seq);
+  });
 }
 
 app.get("/search", function(req, res)
