@@ -82,7 +82,9 @@ function getRandom(callback)
   var n = photos.count();
   var m = Math.floor(Math.random()*n);
   var cursor = photos.find().skip(m).limit(1);
-  callback(cursor.next());
+  cursor.next(function(err, data) {
+    callback(data);
+  });
 }
 
 
