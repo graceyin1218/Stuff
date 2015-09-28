@@ -73,7 +73,7 @@ app.get("/random", function(req, res)
 {
   var random = getRandom(function(doc)
   {
-    res.send(doc);
+    res.send(JSON.stringify(doc));
   });
 });
 
@@ -81,8 +81,8 @@ function getRandom(callback)
 {
   var n = photos.count();
   var m = Math.floor(Math.random()*n);
-  var cursor = photos.find().limit(1).skip(m);
-  callback(cursor.nextObject());
+  var cursor = photos.find().skip(m).limit(1);
+  callback(cursor.next());
 }
 
 
