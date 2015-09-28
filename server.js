@@ -79,16 +79,19 @@ app.get("/random", function(req, res)
 
 function getRandom(callback)
 {
-  var n = photos.count();
-  var m = Math.floor(Math.random()*n);
-  var cursor = photos.find().skip(m).limit(1);
-  cursor.next(function(err, data) {
-    callback(data);
+  photos.count(function(error, n) {
+    var m = Math.floor(Math.random()*n);
+    var cursor = photos.find().skip(m).limit(1);
+    console.log(n, m);
+    cursor.next(function(err, data) {
+      callback(data);
+    });
   });
 }
 
 
 app.use(express.static(__dirname + '/public'));
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
 var server = app.listen(process.env.PORT, function() {
   var host = server.address().address,

@@ -21,6 +21,7 @@
     "mocha": "^2.3.3"
   },
   "dependencies": {
+    "express": "^4.13.3",
     "mongodb": "^2.0.43"
   }
 }

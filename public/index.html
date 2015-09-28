@@ -3,16 +3,28 @@
     <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
   </head>
   <body>
-    <div id="other-picture">
+    <center>
+      <h1>Picture Telephone</h1>
+      <h3>What do you see in this picture?</h3>
+      <div id="main" style="width:500px;border:1px solid #888;overflow: hidden;border-radius: 2px;">
+        <div id="other-picture">
+        </div>
+
+        <input id="search" class="form-control" placeholder="Enter your response here"></input>
+      </div>
+
+    </center>
+    <div id="whole-list" class="container" style="border: 1px solid #888; margin: 10px auto; border-radius: 2px; background: #EEE; padding: 10px; display: none;">
+      <center>
+        <h3>Here's what the whole chain looked like:</h3>
+      </center>
     </div>
 
-    <input id="search" class="form-control"></input>
-
-    <div id="own-picture">
-    </div>
-
-    <div id="whole-list">
-    </div>
+    <center>
+      <div id="play-again" style="margin: 10px 0px;">
+        <a href="/" class="btn btn-primary">Play Again</a>
+      </div>
+    </center>
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="http://www.google.com/jsapi"></script>
